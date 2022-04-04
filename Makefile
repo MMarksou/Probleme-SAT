@@ -1,5 +1,5 @@
-main : main.o inout.o SAT.o
-	gcc -o main main.o inout.o SAT.o -Wall
+main : main.c inout.o SAT.o
+	gcc -o main main.c inout.o SAT.o -Wall
 
 SAT.o : SAT.c SAT.h
 	gcc -c SAT.c -Wall
