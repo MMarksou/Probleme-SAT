@@ -3,6 +3,7 @@
 
 struct {
   char signe;
+  int position;
   char variable;
   litteral *nxt;
 } litteral;
