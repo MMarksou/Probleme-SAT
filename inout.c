@@ -59,6 +59,10 @@ ensemble lecture_fichier(FILE *f) {
         break;
       case '\n':
         break;
+      case '%':
+        fgetc(f);
+        fgetc(f);
+        break;
       default:
         cpt_nb ++;
         while(tmp != ' ' && tmp != EOF){
