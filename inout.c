@@ -74,6 +74,9 @@ ensemble lecture_fichier(FILE *f) {
         break;
     }
   }
+  free(str);
+  free(clause);
+  free(litteral);
   return ensemble;
 }
 
@@ -85,7 +88,7 @@ void afficher_ensemble(ensemble ens) {
   c = ens.premier;
   while(c->nxt != NULL) {
     printf("###############\n");
-    printf("Clause à %d éléments\n", c->nb_element);
+    printf("Clause à %d élément(s)\n", c->nb_element);
     printf("###############\n");
     l = c->premier;
     while(l->nxt != NULL) {
@@ -102,4 +105,24 @@ void afficher_ensemble(ensemble ens) {
     printf("\n");
   }
   printf("###############\n");
+}
+
+void free_ensemble(ensemble ens) {
+  clause *c1;
+  clause *c2;
+  litteral *l1;
+  litteral *l2;
+
+  c1 = ens.premier;
+  while(c1->nxt != NULL) {
+    c2 = c1;
+    c1 = c2->nxt;
+    l1 = c2->premier;
+    while(l1->nxt != NULL) {
+      l2 = l1;
+      l1 = l2->nxt;
+      free(l2);
+    }
+    free(c2);
+  }
 }

@@ -22,5 +22,7 @@ int main(int argc, char const *argv[]) {
 
   //étape de suppression propre des structures
 
+  free_ensemble(ensemble);
+
   return 0;
 }
