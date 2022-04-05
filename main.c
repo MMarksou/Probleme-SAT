@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "inout.h"
+#include "SAT.h"
 
 
 int main(int argc, char const *argv[]) {
@@ -18,9 +19,14 @@ int main(int argc, char const *argv[]) {
 
   afficher_ensemble(ensemble);
 
+  clause_unitaire(ensemble);
+
   //étape de vérification du problème
 
   //étape de suppression propre des structures
+
+  printf("\nAffichage après suppression des clauses unitaires : \n");
+  afficher_ensemble(ensemble);
 
   free_ensemble(ensemble);
 
