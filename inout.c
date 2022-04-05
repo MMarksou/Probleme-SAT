@@ -25,8 +25,13 @@ ensemble lecture_fichier(FILE *f) {
   clause *clause = initialiser_clause();
   litteral *litteral = initialiser_litteral();
 
+  ensemble.premier = clause;
+  clause->premier = litteral;
+
   char tmp;
   char buf[1024];
+  char *str = (char *) malloc(sizeof(1));
+  int cpt_nb = 0;
 
   while(1) {
     tmp = fgetc(f);
@@ -42,21 +47,59 @@ ensemble lecture_fichier(FILE *f) {
         break;
       case '0':
         litteral->nxt = NULL;
+        clause->nb_element = cpt_nb;
         clause->nxt = initialiser_clause();
         clause = clause->nxt;
+        clause->premier = initialiser_litteral();
+        litteral = clause->premier;
+        cpt_nb = 0;
         break;
       case '-':
         litteral->signe = '0';
         break;
+      case '\n':
+        break;
       default:
-        while(isdigit(tmp)){
-        printf("%c\n", tmp);
-        tmp = fgetc(f);
+        cpt_nb ++;
+        while(tmp != ' ' && tmp != EOF){
+          str = realloc(str, strlen(str)+1);
+          str[strlen(str)] = tmp;
+          tmp = fgetc(f);
         }
+        litteral->position = atoi(str);
         litteral->nxt = initialiser_litteral();
         litteral = litteral->nxt;
+        free(str);
+        str = (char *) malloc(sizeof(1));
         break;
     }
   }
   return ensemble;
+}
+
+void afficher_ensemble(ensemble ens) {
+  clause *c;
+  litteral *l;
+  char signe;
+
+  c = ens.premier;
+  while(c->nxt != NULL) {
+    printf("###############\n");
+    printf("Clause à %d éléments\n", c->nb_element);
+    printf("###############\n");
+    l = c->premier;
+    while(l->nxt != NULL) {
+      signe = l->signe;
+      if(signe == '1') {
+        printf("%d\t", l->position);
+      }
+      else {
+        printf("-%d\t", l->position);
+      }
+      l = l->nxt;
+    }
+    c = c->nxt;
+    printf("\n");
+  }
+  printf("###############\n");
 }

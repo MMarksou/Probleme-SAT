@@ -16,6 +16,8 @@ int main(int argc, char const *argv[]) {
   ensemble ensemble = lecture_fichier(src);
   fclose(src);
 
+  afficher_ensemble(ensemble);
+
   //étape de vérification du problème
 
   //étape de suppression propre des structures
