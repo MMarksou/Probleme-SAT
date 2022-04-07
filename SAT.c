@@ -1,49 +1,50 @@
 #include "SAT.h"
 
 // Vérification et suppréssion des clauses unitaires
-void clause_unitaire(ensemble ensemble)
+ensemble clause_unitaire(ensemble e)
 {
-
-  clause *clause_active = ensemble.premier; // Conserve la clause concernée
+  clause *clause_active = e.premier; // Conserve la clause concernée
   clause *clause_precedente = NULL;         // Conserve la clause précédente pour garder la chaine si la clause active est supprimée
+  ensemble resultat; // Ensemble final
 
   while (clause_active->nxt != NULL)
   { // Parcours des clauses de la chaine
     if (clause_active->nb_element <= 1)
     { // Cas d'une clause unitaire
-      if (clause_active == ensemble.premier)
+      if (clause_active == e.premier)
       { // Cas de la première clause vide (pas de précédent)
-
         // On enlève la première clause de la chaine
-        ensemble.premier = clause_active->nxt;
-        free(clause_active);
-        clause_precedente = ensemble.premier;
+        e.premier = e.premier->nxt;
+        clause_active = e.premier;
+        /* Libérer la mémoire de la clause */
       }
       else
-      {
-
-        // On enlève la clause active de la chaine
-        clause_precedente->nxt = clause_active->nxt;
-        free(clause_active);
-        clause_active = clause_precedente;
+      { // On enlève la clause active de la chaine
+        clause_active = clause_active->nxt;
+        clause_precedente->nxt = clause_active;
+        /* Libérer la mémoire de la clause */
       }
     }
-
-    // La clause active devient la précédente et on passe à la clause suivante
-    clause_precedente = clause_active;
-    clause_active = clause_active->nxt;
+    else
+    {
+      // La clause active devient la précédente et on passe à la clause suivante
+      clause_precedente = clause_active;
+      clause_active = clause_precedente->nxt;
+    }
   }
+  return resultat = e; // Retourne le nouvel ensemble de clauses
 }
 
 // Vérification de la présence de litteraux purs et suppréssion des clauses associées
-void litteral_pur(ensemble ensemble)
+void litteral_pur(ensemble e)
 {
   /*
-  clause clause_active = ensemble->premier;
-  clause clause_precedente = NULL;
+  clause* clause_active = ensemble->premier;
+  clause* clause_precedente = NULL;
+  litteral* litteral_actif, litteral_precedent;
 
   while(clause_active != NULL){
-    litteral litteral_actif = clause_active->premier_litteral;
+    litteral_actif = clause_active->premier;
 
     Si pas déjà apparu
       Conserver litteral_actif.valeur pour plus tard
@@ -55,7 +56,7 @@ void litteral_pur(ensemble ensemble)
               Passer au litteral_actif suivant
             Sinon conserver la clause concernée
 
-      Supprimer les litteraux dans les clauses concernées
+      supprimer_litteraux(ensemble, litteral_actif->valeur);
       Remettre à zéro le tableau des clauses concernées
       Passer au litteral_actif suivant
   }
@@ -63,8 +64,34 @@ void litteral_pur(ensemble ensemble)
   printf("OK");
 }
 
+void supprimer_litteraux(ensemble e, int valeur)
+{
+  //   clause *c;
+  //   litteral *l;
+  //   litteral *l_precedent;
+  //
+  //   c = ens.premier;
+  //   while(c->nxt != NULL) {
+  //     l = c->premier;
+  //     while(l->nxt != NULL) {
+  //       if(valeur == l->valeur) {
+  //
+  //       }
+  //       else {
+  //         printf("-%d\t", l->position);
+  //       }
+  //       l = l->nxt;
+  //     }
+  //     c = c->nxt;
+  //     printf("\n");
+  //   }
+  //
+  // }
+  printf("###############\n");
+}
+
 // Prototype Algo SAT //
-int sat(ensemble ensemble)
+int sat(ensemble e)
 {
   /*
   Pour chaque clause

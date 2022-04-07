@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
 
   afficher_ensemble(ensemble);
 
-  clause_unitaire(ensemble);
+  ensemble = clause_unitaire(ensemble);
 
   //étape de vérification du problème
 

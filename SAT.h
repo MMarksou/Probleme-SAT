@@ -3,8 +3,9 @@
 
 #include "inout.h"
 
-void clause_unitaire(ensemble);
+ensemble clause_unitaire(ensemble);
 void litteral_pur(ensemble);
+void supprimer_litteraux(ensemble, int);
 int sat(ensemble);
 
 #endif
