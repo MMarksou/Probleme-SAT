@@ -38,6 +38,8 @@ ensemble lecture_fichier(FILE *f) {
     switch (tmp) {
       case EOF:
         clause->nxt = NULL;
+        free(str);
+        free(litteral);
         return ensemble;
       case 'c':
         fgets(buf, 1024, f);
@@ -78,10 +80,6 @@ ensemble lecture_fichier(FILE *f) {
         break;
     }
   }
-  free(str);
-  free(clause);
-  free(litteral);
-  return ensemble;
 }
 
 void afficher_ensemble(ensemble ens) {
@@ -122,11 +120,13 @@ void free_ensemble(ensemble ens) {
     c2 = c1;
     c1 = c2->nxt;
     l1 = c2->premier;
+    free(c2);
     while(l1->nxt != NULL) {
       l2 = l1;
       l1 = l2->nxt;
       free(l2);
     }
-    free(c2);
+    free(l1);
   }
+  free(c1);
 }
