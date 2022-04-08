@@ -1,36 +1,17 @@
 #include "inout.h"
 
-clause* initialiser_clause() {
-  clause *clause = malloc(sizeof(clause));
-
-  clause->nb_element = 0;
-  clause->nxt = NULL;
-
-  return clause;
-}
-
-litteral* initialiser_litteral() {
-  litteral *litteral = malloc(sizeof(litteral));
-
-  litteral->signe = '1';
-  litteral->position = 0;
-  litteral->variable = ' ';
-  litteral->nxt = NULL;
-
-  return litteral;
-}
-
 ensemble lecture_fichier(FILE *f) {
   ensemble ensemble;
-  clause *clause = initialiser_clause();
-  litteral *litteral = initialiser_litteral();
+  clause *clause = calloc(1,sizeof(clause));
+  litteral *litteral = calloc(1,sizeof(litteral));
+  litteral->signe = '1';
 
   ensemble.premier = clause;
   clause->premier = litteral;
 
   char tmp;
   char buf[1024];
-  char *str = (char *) malloc(sizeof(1));
+  char *str = calloc(1,sizeof(char));
   int cpt_nb = 0;
 
   while(1) {
@@ -50,10 +31,11 @@ ensemble lecture_fichier(FILE *f) {
       case '0':
         litteral->nxt = NULL;
         clause->nb_element = cpt_nb;
-        clause->nxt = initialiser_clause();
+        clause->nxt = calloc(1,sizeof(clause));
         clause = clause->nxt;
-        clause->premier = initialiser_litteral();
+        clause->premier = calloc(1,sizeof(litteral));
         litteral = clause->premier;
+        litteral->signe = '1';
         cpt_nb = 0;
         break;
       case '-':
@@ -73,29 +55,25 @@ ensemble lecture_fichier(FILE *f) {
           tmp = fgetc(f);
         }
         litteral->position = atoi(str);
-        litteral->nxt = initialiser_litteral();
+        litteral->nxt = calloc(1,sizeof(litteral));
         litteral = litteral->nxt;
+        litteral->signe = '1';
         free(str);
-        str = (char *) malloc(sizeof(1));
+        str = calloc(1,sizeof(char));
         break;
     }
   }
 }
 
-void afficher_ensemble(ensemble ens) {
-  clause *c;
-  litteral *l;
-  char signe;
-
-  c = ens.premier;
+void afficher_ensemble(ensemble *ens) {
+  clause *c = ens->premier;
   while(c->nxt != NULL) {
     printf("###############\n");
     printf("Clause à %d élément(s)\n", c->nb_element);
     printf("###############\n");
-    l = c->premier;
+    litteral *l = c->premier;
     while(l->nxt != NULL) {
-      signe = l->signe;
-      if(signe == '1') {
+      if(l->signe == '1') {
         printf("%d\t", l->position);
       }
       else {
@@ -109,24 +87,25 @@ void afficher_ensemble(ensemble ens) {
   printf("###############\n");
 }
 
-void free_ensemble(ensemble ens) {
-  clause *c1;
-  clause *c2;
-  litteral *l1;
-  litteral *l2;
+void free_ensemble(ensemble *ens) {
+  clause *c_actu;
+  clause *c_nxt;
+  litteral *l_actu;
+  litteral *l_nxt;
 
-  c1 = ens.premier;
-  while(c1->nxt != NULL) {
-    c2 = c1;
-    c1 = c2->nxt;
-    l1 = c2->premier;
-    free(c2);
-    while(l1->nxt != NULL) {
-      l2 = l1;
-      l1 = l2->nxt;
-      free(l2);
+  c_actu = ens->premier;
+
+  while(c_actu->nxt != NULL) {
+    c_nxt = c_actu->nxt;
+    l_actu = c_actu->premier;
+    free(c_actu);
+    while(l_actu->nxt != NULL) {
+      l_nxt = l_actu->nxt;
+      free(l_actu);
+      l_actu = l_nxt;
     }
-    free(l1);
+    free(l_actu);
+    c_actu = c_nxt;
   }
-  free(c1);
+  free(c_actu);
 }

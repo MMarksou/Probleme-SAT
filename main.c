@@ -17,18 +17,18 @@ int main(int argc, char const *argv[]) {
   ensemble ensemble = lecture_fichier(src);
   fclose(src);
 
-  afficher_ensemble(ensemble);
+  afficher_ensemble(&ensemble);
 
-  ensemble = clause_unitaire(ensemble);
+  // ensemble = clause_unitaire(ensemble);
 
   //étape de vérification du problème
 
   //étape de suppression propre des structures
 
-  printf("\nAffichage après suppression des clauses unitaires : \n");
-  afficher_ensemble(ensemble);
+  // printf("\nAffichage après suppression des clauses unitaires : \n");
+  // afficher_ensemble(ensemble);
 
-  free_ensemble(ensemble);
+  free_ensemble(&ensemble);
 
   return 0;
 }

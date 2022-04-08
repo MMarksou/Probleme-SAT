@@ -28,13 +28,9 @@ typedef struct ensemble {
 ensemble lecture_fichier(FILE *);
 
 // permet d'afficher le contenu d'une structure ensemble
-void afficher_ensemble(ensemble);
-
-clause* initialiser_clause();
-
-litteral* initialiser_litteral();
+void afficher_ensemble(ensemble *);
 
 // supression propre d'un ensemble
-void free_ensemble(ensemble);
+void free_ensemble(ensemble *);
 
 #endif
