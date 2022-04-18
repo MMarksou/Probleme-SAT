@@ -26,7 +26,9 @@ int main(int argc, char const *argv[]) {
   //étape de suppression propre des structures
 
   // printf("\nAffichage après suppression des clauses unitaires : \n");
-  // afficher_ensemble(ensemble);
+  // afficher_ensemble(&ensemble);
+  // printf("%d\n", compter_clause(&ensemble));
+  // printf("%d\n", compter_litteral(&ensemble));
 
   free_ensemble(&ensemble);
 

@@ -2,12 +2,12 @@
 
 ensemble lecture_fichier(FILE *f) {
   ensemble ensemble;
-  clause *clause = calloc(1,sizeof(clause));
-  litteral *litteral = calloc(1,sizeof(litteral));
-  litteral->signe = '1';
+  clause *c = (clause *) malloc(sizeof(clause));
+  litteral *l = (litteral *) malloc(sizeof(litteral));
+  l->signe = '1';
 
-  ensemble.premier = clause;
-  clause->premier = litteral;
+  ensemble.premier = c;
+  c->premier = l;
 
   char tmp;
   char buf[1024];
@@ -18,9 +18,9 @@ ensemble lecture_fichier(FILE *f) {
     tmp = fgetc(f);
     switch (tmp) {
       case EOF:
-        clause->nxt = NULL;
+        c->nxt = NULL;
         free(str);
-        free(litteral);
+        free(l);
         return ensemble;
       case 'c':
         fgets(buf, 1024, f);
@@ -29,17 +29,17 @@ ensemble lecture_fichier(FILE *f) {
         fgets(buf, 1024, f);
         break;
       case '0':
-        litteral->nxt = NULL;
-        clause->nb_element = cpt_nb;
-        clause->nxt = calloc(1,sizeof(clause));
-        clause = clause->nxt;
-        clause->premier = calloc(1,sizeof(litteral));
-        litteral = clause->premier;
-        litteral->signe = '1';
+        l->nxt = NULL;
+        c->nb_element = cpt_nb;
+        c->nxt = calloc(1,sizeof(clause));
+        c = c->nxt;
+        c->premier = calloc(1,sizeof(litteral));
+        l = c->premier;
+        l->signe = '1';
         cpt_nb = 0;
         break;
       case '-':
-        litteral->signe = '0';
+        l->signe = '0';
         break;
       case '\n':
         break;
@@ -54,10 +54,10 @@ ensemble lecture_fichier(FILE *f) {
           str[strlen(str)] = tmp;
           tmp = fgetc(f);
         }
-        litteral->position = atoi(str);
-        litteral->nxt = calloc(1,sizeof(litteral));
-        litteral = litteral->nxt;
-        litteral->signe = '1';
+        l->position = atoi(str);
+        l->nxt = calloc(1,sizeof(litteral));
+        l = l->nxt;
+        l->signe = '1';
         free(str);
         str = calloc(1,sizeof(char));
         break;

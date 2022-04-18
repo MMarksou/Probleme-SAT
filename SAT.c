@@ -32,6 +32,8 @@ ensemble clause_unitaire(ensemble e)
       clause_active = clause_precedente->nxt;
     }
   }
+  // free(clause_active);
+  // free(clause_precedente);
   return resultat = e; // Retourne le nouvel ensemble de clauses
 }
 
@@ -114,4 +116,25 @@ int sat(ensemble e)
       return 0;
   */
   return 0;
+}
+
+int compter_clause(ensemble *e) {
+  int i = 0;
+  clause *c = e->premier;
+  while(c->nxt != NULL) {
+    i++;
+    c = c->nxt;
+  };
+
+  return i;
+}
+
+int compter_litteral(ensemble *e) {
+  int i = 0;
+  clause *c = e->premier;
+  while(c->nxt != NULL) {
+    i+= c->nb_element;
+    c = c->nxt;
+  }
+  return i;
 }
