@@ -2,7 +2,7 @@ main : main.c inout.o SAT.o
 	gcc -o main main.c inout.o SAT.o -Wall
 
 sudoku : sudoku_encoder.c sudoku_encoder.h
-	gcc -o sudoku sudoku_encoder.c -Wall
+	gcc -o sudoku sudoku_encoder.c -Wall -g
 
 SAT.o : SAT.c SAT.h
 	gcc -c SAT.c -Wall

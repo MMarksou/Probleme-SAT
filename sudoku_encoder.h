@@ -33,4 +33,5 @@ int** encode(grille *);
 
 //écrire le probleme SAT dans un fichier .sat
 void ecriture_sat(int **, int);
+
 #endif

@@ -58,14 +58,14 @@ void afficher_grille(grille *g) {
 }
 
 int val_lit(int ligne, int colonne, int valeur, int nb) {
-  return (ligne-1)*nb*nb+(colonne-1)*nb+(valeur-1)+1;
+  return (ligne-1)*nb*nb+(colonne-1)*nb+valeur;
 }
 
 //le nombre de clauses totales sans les clauses du certificat
 int nb_clauses(int nb) {
-  //(4*nb^2) -> nb de clauses à n littéraux
-  int b1 = 4*nb*nb;
-  //((n^2)*((n*(n-1))/2) -> nb de clauses à 2 littéraux
+  //nb de clauses à n littéraux
+  int b1 = 6*nb*nb;
+  //nb de clauses à 2 littéraux
   int b2 = (nb*nb)*((nb*(nb-1))/2);
   return b1+b2;
 }
@@ -80,9 +80,9 @@ int nb_clauses(int nb) {
 //C6 = la solution respecte le certificat donné
 //Source : https://users.aalto.fi/~tjunttil/2020-DP-AUT/notes-sat/solving.html
 int** encode(grille *g) {
-  int **res = calloc(nb_clauses(g->nb)+g->nb_sol+1,sizeof(int*));
+  int **res = (int **)calloc(nb_clauses(g->nb)+(g->nb_sol)+1,sizeof(int*));
   int *tmp;
-  int cpt_lit = 0;
+  int cpt_lit = 1;
   int cpt_clause = 0;
 
   //C1 | C2
@@ -90,22 +90,22 @@ int** encode(grille *g) {
     for(int c=1; c<(g->nb)+1; c++) {
       //si une cellule (l,c) a au moins une valeur
       tmp = calloc((g->nb)+1, sizeof(int));
+      tmp[0] = g->nb;
       for(int v=1; v<(g->nb)+1; v++) {
         tmp[cpt_lit] = val_lit(l, c, v, g->nb);
         cpt_lit++;
       }
-      //ajout de la clause à n éléments dans res et libération de tmp
-      tmp[cpt_lit] = -1;
+      //ajout de la clause à n éléments dans res
       res[cpt_clause] = tmp;
       cpt_clause++;
-      cpt_lit = 0;
+      cpt_lit = 1;
       //si une cellule (l,c) a au plus une valeur
       for(int v=1; v<(g->nb)+1; v++) {
         for(int w=v+1; w<(g->nb)+1; w++) {
           tmp = calloc(3, sizeof(int));
-          tmp[0] = -val_lit(l, c, v, g->nb);
-          tmp[1] = -val_lit(l, c, w, g->nb);
-          tmp[2] = -1;
+          tmp[0] = 2;
+          tmp[1] = -val_lit(l, c, v, g->nb);
+          tmp[2] = -val_lit(l, c, w, g->nb);
 
           //ajout dans res et libération de tmp
           res[cpt_clause] = tmp;
@@ -114,68 +114,72 @@ int** encode(grille *g) {
       }
     }
   }
+  printf("%d %d\n", nb_clauses(g->nb)+g->nb_sol, cpt_clause);
   //C3 | C4 | C5
   for(int v=1; v<(g->nb)+1; v++) {
     //si chaque ligne a une valeur v
     for(int l=1; l< (g->nb)+1; l++){
       tmp = calloc((g->nb)+1, sizeof(int));
+      tmp[0] = g->nb;
       for(int c=1; c<(g->nb)+1; c++) {
           tmp[cpt_lit] = val_lit(l, c, v, g->nb);
           cpt_lit++;
       }
-      //ajout de la clause à n éléments dans res et libération de tmp
-      tmp[cpt_lit] = -1;
+      //ajout de la clause à n éléments dans res
       res[cpt_clause] = tmp;
       cpt_clause++;
-      cpt_lit = 0;
+      cpt_lit = 1;
     }
     //si chaque colonne a une valeur v
     for(int c=1; c< (g->nb)+1; c++){
       tmp = calloc((g->nb)+1, sizeof(int));
+      tmp[0] = g->nb;
       for(int l=1; l<(g->nb)+1; l++) {
           tmp[cpt_lit] = val_lit(l, c, v, g->nb);
           cpt_lit++;
       }
-      //ajout de la clause à n éléments dans res et libération de tmp
-      tmp[cpt_lit] = -1;
+      //ajout de la clause à n éléments dans res
       res[cpt_clause] = tmp;
       cpt_clause++;
-      cpt_lit = 0;
+      cpt_lit = 1;
     }
     //si chaque bloc a une valeur v
     //on sélectionne chaque bloc un par un
-    for(int bl=1; bl<(g->bloc)+1; bl++) {
-      for(int bc=1; bc<(g->bloc)+1; bc++) {
+    for(int bl=0; bl<(g->bloc); bl++) {
+      for(int bc=0; bc<(g->bloc); bc++) {
         //on crée la condition de valeur à chaque case du bloc sélectionné
         for(int lb=1; lb<(g->bloc)+1; lb++) {
           tmp = calloc((g->nb)+1, sizeof(int));
+          tmp[0] = g->nb;
           for(int cb=1; cb<(g->bloc)+1; cb++){
             tmp[cpt_lit] = val_lit(bl*(g->bloc)+lb, bc*(g->bloc)+cb,v, g->nb);
             cpt_lit++;
           }
-          //ajout de la clause à n éléments dans res et libération de tmp
-          tmp[cpt_lit] = -1;
+          //ajout de la clause à n éléments dans res
           res[cpt_clause] = tmp;
           cpt_clause++;
-          cpt_lit = 0;
+          cpt_lit = 1;
         }
       }
     }
   }
+  printf("%d %d\n", nb_clauses(g->nb)+g->nb_sol, cpt_clause);
   //C6
   //Notre problème doit respecter le certificat, on écrit alors des clauses
   //unitaires faisait référence aux littéraux concernés
   for(int l=1; l< (g->nb)+1; l++){
     for(int c=1; c<(g->nb)+1; c++) {
       if(g->matrice[l-1][c-1] != 0){
-        tmp = calloc(2,sizeof(int));
-        tmp[0] = val_lit(l, c, g->matrice[l-1][c-1], g->nb);
-        tmp[1] = -1;
+        tmp = calloc(2, sizeof(int));
+        tmp[0] = 1;
+        tmp[1] = val_lit(l, c, g->matrice[l-1][c-1], g->nb);
         res[cpt_clause] = tmp;
         cpt_clause++;
       }
     }
   }
+  printf("%d %d\n", nb_clauses(g->nb)+g->nb_sol, cpt_clause);
+  res[nb_clauses(g->nb)+g->nb_sol] = NULL;
   return res;
 }
 
@@ -185,18 +189,27 @@ void ecriture_sat(int **sat, int nb){
   f = fopen("tmp.sat", "w");
   fprintf(f, "c sudoku %d x %d en une instance SAT\n", nb, nb);
   while(sat[i] != NULL) {
-    for(int j=0; j<sizeof(sat[i]); j++) {
-      fprintf(f, "%d ", sat[i][j]);
-      j++;
+    if(sat[i][0] == nb*nb) {
+      for(int j=1; j<nb*nb; j++)
+        fprintf(f, "%d ", sat[i][j]);
+      fprintf(f, "0\n");
     }
-    fprintf(f, "0\n");
+    if(sat[i][0] == 2) {
+      fprintf(f, "%d %d 0\n", sat[i][1], sat[i][2]);
+    }
+    if(sat[i][0] == 1) {
+      fprintf(f, "%d 0\n", sat[i][1]);
+    }
     i++;
   }
   fclose(f);
 }
 
 void supprimer_sat(int **sat){
-  for(int i=0; i<sizeof(sat); i++) free(sat[i]);
+  int i=0;
+  while(sat[i] != NULL){
+    free(sat[i]);
+  }
   free(sat);
 }
 
@@ -217,7 +230,7 @@ int main(int argc, char const *argv[]) {
   ecriture_sat(sat, g->bloc);
 
   //suppression de la mémoire
-  // supprimer_sat(sat);
+  supprimer_sat(sat);
   supprimer_grille(g);
   return 0;
 }
