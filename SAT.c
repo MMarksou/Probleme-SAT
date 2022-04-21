@@ -4,8 +4,8 @@
 ensemble clause_unitaire(ensemble e)
 {
   clause *clause_active = e.premier; // Conserve la clause concernée
-  clause *clause_precedente = NULL;         // Conserve la clause précédente pour garder la chaine si la clause active est supprimée
-  ensemble resultat; // Ensemble final
+  clause *clause_precedente = NULL;  // Conserve la clause précédente pour garder la chaine si la clause active est supprimée
+  ensemble resultat;                 // Ensemble final
 
   while (clause_active->nxt != NULL)
   { // Parcours des clauses de la chaine
@@ -32,64 +32,176 @@ ensemble clause_unitaire(ensemble e)
       clause_active = clause_precedente->nxt;
     }
   }
-  // free(clause_active);
-  // free(clause_precedente);
   return resultat = e; // Retourne le nouvel ensemble de clauses
 }
 
 // Vérification de la présence de litteraux purs et suppréssion des clauses associées
-void litteral_pur(ensemble e)
+ensemble litteral_pur(ensemble e)
 {
-  /*
-  clause* clause_active = ensemble->premier;
-  clause* clause_precedente = NULL;
-  litteral* litteral_actif, litteral_precedent;
+  ensemble resultat;
+  clause *clause_active = e.premier;
+  litteral *litteral_actif;
+  valeurs *vals = initialiser_valeurs();
+  valeurs *vals_actif;
+  valeurs *vals_parcours;
+  valeurs *vals_resultat;
+  valeurs *vals_resultat_actif;
+  int litteral_pur = 0;
 
-  while(clause_active != NULL){
+  vals_actif = vals;
+
+  while (clause_active != NULL)
+  {
     litteral_actif = clause_active->premier;
 
-    Si pas déjà apparu
-      Conserver litteral_actif.valeur pour plus tard
-      Parcourir les autres clauses
-        Pour chaque litteral dans la clause
-          Si litteral == litteral_actif
-            Si litteral.signe != litteral_actif.signe
-              Remettre à zéro le tableau des clauses concernées
-              Passer au litteral_actif suivant
-            Sinon conserver la clause concernée
+    while (litteral_actif != NULL)
+    {
+      if (litteral_actif->signe == '1')
+      {
+        vals_actif->val = litteral_actif->position;
+      }
+      else
+      {
+        vals_actif->val = -litteral_actif->position;
+      }
 
-      supprimer_litteraux(ensemble, litteral_actif->valeur);
-      Remettre à zéro le tableau des clauses concernées
-      Passer au litteral_actif suivant
+      vals_actif->nxt = initialiser_valeurs();
+      vals_actif = vals_actif->nxt;
+
+      litteral_actif = litteral_actif->nxt;
+    }
+    clause_active = clause_active->nxt;
   }
-    */
-  printf("OK");
+
+  vals_actif = vals;
+  vals_resultat = initialiser_valeurs();
+  vals_resultat_actif = vals_resultat;
+
+  while (vals_actif != NULL)
+  {
+    vals_parcours = vals;
+    while (vals_parcours != NULL)
+    {
+      if (abs(vals_actif->val) == abs(vals_parcours->val))
+      {
+        if (vals_actif->val != vals_parcours->val)
+        {
+          litteral_pur = 1;
+        }
+      }
+      vals_parcours = vals_parcours->nxt;
+    }
+    if (litteral_pur == 0)
+    {
+      vals_parcours = vals;
+
+      while (vals_parcours != NULL)
+      {
+        if (abs(vals_actif->val) == abs(vals_parcours->val))
+        {
+          vals_resultat_actif->val = vals_actif->val;
+          vals_resultat_actif->nxt = initialiser_valeurs();
+          vals_resultat_actif = vals_resultat_actif->nxt;
+          break;
+        }
+
+        vals_parcours = vals_parcours->nxt;
+      }
+    }
+    litteral_pur = 0;
+    vals_actif = vals_actif->nxt;
+  }
+  resultat = supprimer_litteraux(e, vals_resultat);
+  free_valeurs(vals);
+  free_valeurs(vals_resultat);
+  return resultat;
 }
 
-void supprimer_litteraux(ensemble e, int valeur)
+// Supprime les littéraux présents dans la structure valeurs
+ensemble supprimer_litteraux(ensemble e, valeurs *vals)
 {
-  //   clause *c;
-  //   litteral *l;
-  //   litteral *l_precedent;
-  //
-  //   c = ens.premier;
-  //   while(c->nxt != NULL) {
-  //     l = c->premier;
-  //     while(l->nxt != NULL) {
-  //       if(valeur == l->valeur) {
-  //
-  //       }
-  //       else {
-  //         printf("-%d\t", l->position);
-  //       }
-  //       l = l->nxt;
-  //     }
-  //     c = c->nxt;
-  //     printf("\n");
-  //   }
-  //
-  // }
+  ensemble resultat;
+  valeurs *vals_active = vals;
+  clause *clause_active;
+  litteral *litteral_actif;
+  litteral *litteral_precedent = NULL;
+
+  while (vals_active->nxt != NULL)
+  {
+    clause_active = e.premier;
+    while (clause_active->nxt != NULL)
+    {
+      litteral_actif = clause_active->premier;
+      litteral_precedent = NULL;
+      while (litteral_actif->nxt != NULL)
+      {
+        if (abs(litteral_actif->position) == abs(vals_active->val))
+        {
+          if (litteral_actif == clause_active->premier)
+          {
+
+            clause_active->premier = clause_active->premier->nxt;
+            litteral_actif = clause_active->premier;
+          }
+          else
+          {
+            litteral_actif = litteral_actif->nxt;
+            litteral_precedent->nxt = litteral_actif;
+          }
+        }
+        else
+        {
+          litteral_precedent = litteral_actif;
+          litteral_actif = litteral_actif->nxt;
+        }
+      }
+      clause_active = clause_active->nxt;
+      litteral_actif = clause_active->premier;
+      litteral_precedent = NULL;
+    }
+    vals_active = vals_active->nxt;
+  }
+  return resultat = e;
+}
+
+// Initialise un élément de la structure valeurs
+valeurs *initialiser_valeurs()
+{
+  valeurs *val = malloc(sizeof(valeurs));
+
+  val->val = 0;
+  val->nxt = NULL;
+
+  return val;
+}
+
+// Affiche les éléments de la structure valeurs
+void afficher_valeurs(valeurs *val)
+{
+  valeurs *v1 = val;
+  printf("\n###############\n");
+  while (v1 != NULL)
+  {
+    printf("%d\n", v1->val);
+    v1 = v1->nxt;
+  }
   printf("###############\n");
+}
+
+// Libère la mémoire liée aux éléments de la structure valeurs
+void free_valeurs(valeurs *val)
+{
+  valeurs *v1;
+  valeurs *v2;
+
+  v1 = val;
+  while (v1 != NULL)
+  {
+    v2 = v1;
+    v1 = v2->nxt;
+    free(v2);
+  }
+  free(v1);
 }
 
 // Prototype Algo SAT //

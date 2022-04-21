@@ -3,11 +3,23 @@
 
 #include "inout.h"
 
+// Liste chainée représentant les littéraux purs à supprimer
+typedef struct valeurs{
+  int val;
+  struct valeurs *nxt;
+} valeurs;
+
 ensemble clause_unitaire(ensemble);
 
-void litteral_pur(ensemble);
+ensemble litteral_pur(ensemble);
 
-void supprimer_litteraux(ensemble, int);
+ensemble supprimer_litteraux(ensemble, valeurs*);
+
+valeurs* initialiser_valeurs();
+
+void afficher_valeurs(valeurs*);
+
+void free_valeurs(valeurs*);
 
 int compter_clause(ensemble *);
 

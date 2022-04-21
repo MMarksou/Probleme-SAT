@@ -19,14 +19,16 @@ int main(int argc, char const *argv[]) {
 
   afficher_ensemble(&ensemble);
 
-  // ensemble = clause_unitaire(ensemble);
+  ensemble = clause_unitaire(ensemble);
+
+  ensemble = litteral_pur(ensemble);
 
   //étape de vérification du problème
 
   //étape de suppression propre des structures
 
-  // printf("\nAffichage après suppression des clauses unitaires : \n");
-  // afficher_ensemble(&ensemble);
+  printf("\nAffichage après suppression des clauses unitaires : \n");
+  afficher_ensemble(&ensemble);
   // printf("%d\n", compter_clause(&ensemble));
   // printf("%d\n", compter_litteral(&ensemble));
 
