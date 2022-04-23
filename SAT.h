@@ -27,4 +27,6 @@ int compter_litteral(ensemble *);
 
 int sat(ensemble);
 
+ensemble reduction_ensemble(ensemble e)
+
 #endif

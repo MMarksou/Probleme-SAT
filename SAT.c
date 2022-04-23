@@ -250,3 +250,32 @@ int compter_litteral(ensemble *e) {
   }
   return i;
 }
+
+//Permet la réduction d'un ensemble en vérifiant les clauses unitaires et les
+//littéraux purs. Tant qu'il y a du changement (chose qu'on peut savoir en
+//en comptant le nombre de clauses et de littéraux restants), on continue à
+//réduire. L'algo s'arrête quand il n'y a pas eu de modification après un tour
+//de boucle.
+ensemble reduction_ensemble(ensemble e) {
+  int p_nb_clauses = compter_clause(&e); //dépend du nb de clauses
+  int p_nb_litteraux = compter_litteral(&e); //dépend du nb de clauses
+  int s_nb_clauses = 0;
+  int s_nb_litteraux = 0;
+  ensemble resultat;
+
+  resultat = clause_unitaire(e);
+  resultat = litteral_pur(e);
+  s_nb_clauses = compter_clause(&e); //dépend du nb de clauses
+  s_nb_litteraux = compter_litteral(&e); //dépend du nb de clauses
+
+  while(p_nb_clauses != s_nb_clauses || p_nb_litteraux != s_nb_litteraux) {
+    p_nb_clauses = s_nb_clauses;
+    p_nb_litteraux = s_nb_litteraux;
+    resultat = clause_unitaire(e);
+    resultat = litteral_pur(e);
+    s_nb_clauses = compter_clause(&e); //dépend du nb de clauses
+    s_nb_litteraux = compter_litteral(&e); //dépend du nb de clauses
+  }
+
+  return resultat;
+}
