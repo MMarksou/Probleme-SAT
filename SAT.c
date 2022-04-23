@@ -1,8 +1,10 @@
 #include "SAT.h"
 
+extern int *mot; //variable globale utilisée pour le backtraking
+extern ensemble tmp_sat; //la même pour notre ensemble
+
 // Vérification et suppréssion des clauses unitaires
-ensemble clause_unitaire(ensemble e)
-{
+ensemble clause_unitaire(ensemble e){
   clause *clause_active = e.premier; // Conserve la clause concernée
   clause *clause_precedente = NULL;  // Conserve la clause précédente pour garder la chaine si la clause active est supprimée
   ensemble resultat;                 // Ensemble final
@@ -278,4 +280,19 @@ ensemble reduction_ensemble(ensemble e) {
   }
 
   return resultat;
+}
+
+int backtraking(int pos) {
+  if(pos == tmp_sat.lit_max){
+    //A compléter !!!!!
+    for(int i=0; i<tmp_sat.lit_max; i++){
+      printf("%d", mot[i]);
+    }
+    printf("\n");
+    return 0;
+  }
+  mot[pos] = 0;
+  backtraking(pos+1);
+  mot[pos] = 1;
+  backtraking(pos+1);
 }

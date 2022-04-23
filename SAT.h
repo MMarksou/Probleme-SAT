@@ -3,6 +3,9 @@
 
 #include "inout.h"
 
+int *mot;
+ensemble tmp_sat;
+
 // Liste chainée représentant les littéraux purs à supprimer
 typedef struct valeurs{
   int val;
@@ -27,6 +30,8 @@ int compter_litteral(ensemble *);
 
 int sat(ensemble);
 
-ensemble reduction_ensemble(ensemble e)
+ensemble reduction_ensemble(ensemble);
+
+int backtraking(int);
 
 #endif

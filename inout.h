@@ -22,6 +22,7 @@ typedef struct clause {
 
 typedef struct ensemble {
   struct clause *premier;
+  int lit_max;
 } ensemble;
 
 //  permet de lire dans un fichier .sat et d'écrire son contenu dans une structure ensemble

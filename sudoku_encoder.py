@@ -53,7 +53,7 @@ def c1_c2():
                     sat.append([-val_lit(l,c,v), -val_lit(l,c,w)]) #N²*N(N+1)/2
 
 def c3_c4_c5():
-    global sat, taille, bloc
+    global sat, taille, bloc, litteraux
 
     for v in range(1, taille+1):
         for l in range(1, taille+1):
@@ -69,6 +69,7 @@ def c3_c4_c5():
             for bc in range(0, bloc):
                 sat.append([val_lit(bl*bloc+lb, bc*bloc+bc, v)
                 for lb in range(1, taille+1) for bc in range(1, taille+1)]) #N⁴
+        litteraux = sat[-1][-1]
 
 def c6(g):
     global sat, taille
@@ -87,9 +88,10 @@ def c6(g):
 
 def ecriture_sat(sat):
 
-    global bloc
+    global bloc, litteraux
     f = open("tmp.sat", "w")
     f.write("c sudoku "+str(bloc)+" x "+str(bloc)+" en SAT\n")
+    f.write("p cnf "+str(litteraux)+"\n")
 
     for clause in sat:
         f.write(" ".join(str(l) for l in clause) + " 0\n")
@@ -99,6 +101,7 @@ def ecriture_sat(sat):
 if __name__ == '__main__':
     bloc = 0
     taille = 0
+    litteraux = 0
     sat = []
 
     fichier = sys.argv[1]

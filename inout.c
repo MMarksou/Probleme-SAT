@@ -26,7 +26,8 @@ ensemble lecture_fichier(FILE *f) {
         fgets(buf, 1024, f);
         break;
       case 'p':
-        fgets(buf, 1024, f);
+        // fgets(buf, 1024, f);
+        fscanf(f, "%s %d", buf, &ensemble.lit_max);
         break;
       case '0':
         l->nxt = NULL;
