@@ -40,6 +40,7 @@ ensemble clause_unitaire(ensemble e){
 }
 
 // Vérification de la présence de litteraux purs et suppréssion des clauses associées
+// en utilisant la structure valeur qui permet de garder une liste des littéraux à supprimer 
 ensemble litteral_pur(ensemble e)
 {
   ensemble resultat;
@@ -54,6 +55,7 @@ ensemble litteral_pur(ensemble e)
 
   vals_actif = vals;
 
+  // Premier parcours pour récupérer les littéraux
   while (clause_active != NULL)
   {
     litteral_actif = clause_active->premier;
@@ -81,6 +83,7 @@ ensemble litteral_pur(ensemble e)
   vals_resultat = initialiser_valeurs();
   vals_resultat_actif = vals_resultat;
 
+  // Deuxième parcours pour ne garder que les littéraux purs
   while (vals_actif != NULL)
   {
     vals_parcours = vals;
@@ -115,6 +118,7 @@ ensemble litteral_pur(ensemble e)
     litteral_pur = 0;
     vals_actif = vals_actif->nxt;
   }
+  // suppression des littéraux et libération de mémoire
   resultat = supprimer_litteraux(e, vals_resultat);
   free_valeurs(vals);
   free_valeurs(vals_resultat);
@@ -208,32 +212,7 @@ void free_valeurs(valeurs *val)
   free(v1);
 }
 
-// Prototype Algo SAT //
-int sat(ensemble e)
-{
-  /*
-  Pour chaque clause
-    clause_unitaire(ensemble);
-    litteral_pur(ensemble);
-
-    Si plus de clauses
-      return 1;
-    Sinon Pour chaque litteral de la clause
-      Si hypothèse de litteral == 1
-        Si Appel récursif == 1
-          return 1;
-        Sinon hypothèse de litteral == 0
-          Si Appel récursif == 1
-            return 1;
-          Sinon
-            return 0;
-
-    Si parcours de tous les litteraux
-      return 0;
-  */
-  return 0;
-}
-
+// Retourne le nombre de clauses de l'ensemble
 int compter_clause(ensemble *e) {
   int i = 0;
   clause *c = e->premier;
@@ -245,6 +224,7 @@ int compter_clause(ensemble *e) {
   return i;
 }
 
+// Retourne le nombre de littéraux de l'ensemble
 int compter_litteral(ensemble *e) {
   int i = 0;
   clause *c = e->premier;
@@ -284,14 +264,17 @@ ensemble reduction_ensemble(ensemble e) {
   return resultat;
 }
 
+// Fonction de backtracking si un ensemble n'est pas validé par
+// la suppression des clauses unitaires et des litéraux purs
 int backtraking(int pos) {
   if(start){
-    if(pos == tmp_sat.lit_max){
-      //A compléter !!!!!
-      // /!\ Ne pas oublier que si solution existe, on modifie start pour empêcher
-      //la continuation de la boucle
+    if(pos == tmp_sat.lit_max){ 
+      
+      // Fonction incomplète
+      
+      start = 0;     
       return 1;
-    }
+    } 
     mot[pos] = 0;
     backtraking(pos+1);
     mot[pos] = 1;
@@ -364,6 +347,7 @@ void modification_signe(ensemble e) {
   }
 }
 
+// Ecrit dans un fichier l'ensemble final
 void ecriture_solution_sat(ensemble e) {
   FILE *src;
   int cpt = 0;

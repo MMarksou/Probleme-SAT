@@ -10,6 +10,7 @@ extern char entete[50]; //afin de garder l'entete de nos fichiers entete
 int main(int argc, char const *argv[]) {
   FILE *src;
 
+
   //étape de lecture de fichier et d'écriture en mémoire
   src = fopen(argv[1], "r");
   if(!src) {
@@ -22,27 +23,36 @@ int main(int argc, char const *argv[]) {
 
   afficher_ensemble(&ens);
 
-  //étape de vérification du problème
 
+  //étape de vérification du problème
   tmp_sat = ens;
   mot = calloc(ens.lit_max, sizeof(int));
   mot[0]= 1;
   mot[1] = 0;
   mot[2] = 1;
-  // printf("%d\n",ens.lit_max);
-  // modification_signe(ens);
-  ecriture_solution_sat(ens);
+  
+
+  // Déroulement de l'algorithme
+  /*while(compter_clause(&tmp_sat) != compter_clause(&ens) && compter_litteral(&tmp_sat) != compter_litteral(&ens)){
+    
+    tmp_sat = copie_ensemble(ens);
+    
+    tmp_sat = reduction_ensemble(tmp_sat);
+
+    // Appel du backtracking avec la fonction backtracking() 
+  } */
+
+
+  // Test des fonctions de suppression des clauses unitaires et littéraux purs
+  ens = reduction_ensemble(ens);
+
   printf("\nAffichage après modif \n");
-  // afficher_ensemble(&ens);
+  afficher_ensemble(&ens);
+
+  // Ecriture du résultat dans un fichier de sortie
+  ecriture_solution_sat(ens);
+
   //étape de suppression propre des structures
-
-  // printf("%d", backtraking(0));
-
-  // printf("\nAffichage après suppression des clauses unitaires : \n");
-  // afficher_ensemble(&ensemble);
-  // printf("%d\n", compter_clause(&ensemble));
-  // printf("%d\n", compter_litteral(&ensemble));
-
   free_ensemble(&tmp_sat);
   free_ensemble(&ens);
   free(mot);
