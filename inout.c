@@ -1,7 +1,5 @@
 #include "inout.h"
 
-extern char entete[50];
-
 ensemble lecture_fichier(FILE *f) {
   ensemble ensemble;
   clause *c = (clause *) malloc(sizeof(clause));

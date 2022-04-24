@@ -20,14 +20,18 @@ int main(int argc, char const *argv[]) {
   ensemble ens = lecture_fichier(src);
   fclose(src);
 
-  // afficher_ensemble(&ens);
+  afficher_ensemble(&ens);
 
   //étape de vérification du problème
 
-  // tmp_sat = ens;
+  tmp_sat = ens;
   mot = calloc(ens.lit_max, sizeof(int));
-  printf("%d\n",ens.lit_max);
-  modification_signe(ens);
+  mot[0]= 1;
+  mot[1] = 0;
+  mot[2] = 1;
+  // printf("%d\n",ens.lit_max);
+  // modification_signe(ens);
+  ecriture_solution_sat(ens);
   printf("\nAffichage après modif \n");
   // afficher_ensemble(&ens);
   //étape de suppression propre des structures
@@ -39,7 +43,7 @@ int main(int argc, char const *argv[]) {
   // printf("%d\n", compter_clause(&ensemble));
   // printf("%d\n", compter_litteral(&ensemble));
 
-  // free_ensemble(&tmp_sat);
+  free_ensemble(&tmp_sat);
   free_ensemble(&ens);
   free(mot);
 

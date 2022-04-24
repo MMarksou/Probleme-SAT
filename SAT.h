@@ -38,4 +38,7 @@ ensemble copie_ensemble(ensemble);
 
 void modification_signe(ensemble);
 
+//Permet d'écrire dans un fichier "resultat.sat" une des solutions possibles
+void ecriture_solution_sat(ensemble);
+
 #endif

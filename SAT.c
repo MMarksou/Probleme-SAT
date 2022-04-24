@@ -2,6 +2,7 @@
 
 extern int *mot; //variable globale utilisée pour le backtraking
 extern ensemble tmp_sat; //la même pour notre ensemble
+extern char entete[50];
 int start = 1;
 
 // Vérification et suppréssion des clauses unitaires
@@ -287,11 +288,6 @@ int backtraking(int pos) {
   if(start){
     if(pos == tmp_sat.lit_max){
       //A compléter !!!!!
-      for(int i=0; i<tmp_sat.lit_max; i++){
-        printf("%d", mot[i]);
-      }
-      printf("\n");
-
       // /!\ Ne pas oublier que si solution existe, on modifie start pour empêcher
       //la continuation de la boucle
       return 1;
@@ -366,4 +362,27 @@ void modification_signe(ensemble e) {
     }
     c = c->nxt;
   }
+}
+
+void ecriture_solution_sat(ensemble e) {
+  FILE *src;
+  int cpt = 0;
+
+  src = fopen("resultat.sat", "w");
+  fprintf(src, "c%s\n", entete);
+
+  for(int i=1; i<e.lit_max+1; i++){
+    if(cpt == 20){
+      fprintf(src, "\n");
+      cpt = 0;
+    }
+    if(mot[i-1] == 0) {
+      fprintf(src, "%d ", -i);
+    }
+    else {
+      fprintf(src, "%d ", i);
+    }
+    cpt++;
+  }
+  fclose(src);
 }
