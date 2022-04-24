@@ -67,8 +67,8 @@ def c3_c4_c5():
         #on sélectionne chaque bloc un par un
         for bl in range(0, bloc):
             for bc in range(0, bloc):
-                sat.append([val_lit(bl*bloc+lb, bc*bloc+bc, v)
-                for lb in range(1, taille+1) for bc in range(1, taille+1)]) #N⁴
+                sat.append([val_lit(bl*bloc+lb, bc*bloc+cb, v)
+                for lb in range(1, bloc+1) for cb in range(1, bloc+1)]) #N²
         litteraux = sat[-1][-1]
 
 def c6(g):

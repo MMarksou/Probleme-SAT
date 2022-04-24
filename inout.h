@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 
+char entete[50];
 
 typedef struct litteral {
   char signe; // 0 = négatif, 1 = positif

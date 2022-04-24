@@ -5,6 +5,7 @@
 
 extern int *mot; //variable globale utilisée pour le backtraking
 extern ensemble tmp_sat; //la même pour notre ensemble
+extern char entete[50]; //afin de garder l'entete de nos fichiers entete
 
 int main(int argc, char const *argv[]) {
   FILE *src;
@@ -19,15 +20,16 @@ int main(int argc, char const *argv[]) {
   ensemble ens = lecture_fichier(src);
   fclose(src);
 
-  afficher_ensemble(&ens);
+  // afficher_ensemble(&ens);
 
   //étape de vérification du problème
 
   // tmp_sat = ens;
   mot = calloc(ens.lit_max, sizeof(int));
+  printf("%d\n",ens.lit_max);
   modification_signe(ens);
   printf("\nAffichage après modif \n");
-  afficher_ensemble(&ens);
+  // afficher_ensemble(&ens);
   //étape de suppression propre des structures
 
   // printf("%d", backtraking(0));
@@ -39,7 +41,7 @@ int main(int argc, char const *argv[]) {
 
   // free_ensemble(&tmp_sat);
   free_ensemble(&ens);
-  // free(mot);
+  free(mot);
 
   return 0;
 }

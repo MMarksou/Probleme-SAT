@@ -1,5 +1,7 @@
 #include "inout.h"
 
+extern char entete[50];
+
 ensemble lecture_fichier(FILE *f) {
   ensemble ensemble;
   clause *c = (clause *) malloc(sizeof(clause));
@@ -23,7 +25,7 @@ ensemble lecture_fichier(FILE *f) {
         free(l);
         return ensemble;
       case 'c':
-        fgets(buf, 1024, f);
+        fgets(entete, 50, f);
         break;
       case 'p':
         // fgets(buf, 1024, f);
