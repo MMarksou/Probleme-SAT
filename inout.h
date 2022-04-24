@@ -8,7 +8,7 @@
 
 
 typedef struct litteral {
-  char signe;
+  char signe; // 0 = négatif, 1 = positif
   int position;
   struct litteral *nxt;
 } litteral;

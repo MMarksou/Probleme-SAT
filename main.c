@@ -24,7 +24,10 @@ int main(int argc, char const *argv[]) {
   //étape de vérification du problème
 
   // tmp_sat = ens;
-  // mot = calloc(ens.lit_max, sizeof(int));
+  mot = calloc(ens.lit_max, sizeof(int));
+  modification_signe(ens);
+  printf("\nAffichage après modif \n");
+  afficher_ensemble(&ens);
   //étape de suppression propre des structures
 
   // printf("%d", backtraking(0));

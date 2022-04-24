@@ -36,4 +36,6 @@ int backtraking(int);
 
 ensemble copie_ensemble(ensemble);
 
+void modification_signe(ensemble);
+
 #endif

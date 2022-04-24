@@ -343,3 +343,27 @@ ensemble copie_ensemble(ensemble e) {
 
   return cp_ens;
 }
+
+//selon le contenu du mot binaire, cela modifie les signes de nos littéraux
+//ce qui va nous permettre par la suite de calculer la solution
+void modification_signe(ensemble e) {
+  clause *c = e.premier;
+  while(c->nxt != NULL) {
+    litteral *l = c->premier;
+    while(l->nxt != NULL) {
+      if(l->signe == '0'){
+        if(mot[(l->position)-1]) {
+          l->signe = '0';
+        }
+        else {
+          l->signe = '1';
+        }
+      }
+      else {
+        l->signe = (char) mot[(l->position)-1];
+      }
+      l = l->nxt;
+    }
+    c = c->nxt;
+  }
+}
