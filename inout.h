@@ -10,7 +10,6 @@
 typedef struct litteral {
   char signe;
   int position;
-  char variable;
   struct litteral *nxt;
 } litteral;
 

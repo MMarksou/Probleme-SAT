@@ -2,6 +2,7 @@
 
 extern int *mot; //variable globale utilisée pour le backtraking
 extern ensemble tmp_sat; //la même pour notre ensemble
+int start = 1;
 
 // Vérification et suppréssion des clauses unitaires
 ensemble clause_unitaire(ensemble e){
@@ -283,16 +284,62 @@ ensemble reduction_ensemble(ensemble e) {
 }
 
 int backtraking(int pos) {
-  if(pos == tmp_sat.lit_max){
-    //A compléter !!!!!
-    for(int i=0; i<tmp_sat.lit_max; i++){
-      printf("%d", mot[i]);
+  if(start){
+    if(pos == tmp_sat.lit_max){
+      //A compléter !!!!!
+      for(int i=0; i<tmp_sat.lit_max; i++){
+        printf("%d", mot[i]);
+      }
+      printf("\n");
+
+      // /!\ Ne pas oublier que si solution existe, on modifie start pour empêcher
+      //la continuation de la boucle
+      return 1;
     }
-    printf("\n");
-    return 0;
+    mot[pos] = 0;
+    backtraking(pos+1);
+    mot[pos] = 1;
+    backtraking(pos+1);
   }
-  mot[pos] = 0;
-  backtraking(pos+1);
-  mot[pos] = 1;
-  backtraking(pos+1);
+}
+
+//fonction permettant la copie d'une ensemble
+ensemble copie_ensemble(ensemble e) {
+  ensemble cp_ens;
+  cp_ens.lit_max = e.lit_max;
+  clause *cp_c = (clause *) malloc(sizeof(clause));
+  clause *c = e.premier;
+
+  cp_ens.premier = cp_c;
+
+  while(c->nxt != NULL) {
+    litteral *l = c->premier;
+    litteral *cp_l = (litteral *) malloc(sizeof(litteral));
+    cp_c->premier = cp_l;
+    cp_c->nb_element = c->nb_element;
+
+    while(l->nxt != NULL) {
+      cp_l->signe = l->signe;
+      cp_l->position = l->position;
+
+      l = l->nxt;
+      if(l == NULL){
+        cp_l->nxt = NULL;
+      }
+      else {
+        cp_l->nxt = calloc(1,sizeof(litteral));
+        cp_l = cp_l->nxt;
+      }
+    }
+    c = c->nxt;
+    if(c == NULL) {
+      cp_c->nxt = NULL;
+    }
+    else {
+      cp_c->nxt = calloc(1,sizeof(clause));
+      cp_c = cp_c->nxt;
+    }
+  }
+
+  return cp_ens;
 }

@@ -16,30 +16,27 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  ensemble ensemble = lecture_fichier(src);
+  ensemble ens = lecture_fichier(src);
   fclose(src);
 
-  afficher_ensemble(&ensemble);
-
-  // ensemble = clause_unitaire(ensemble);
-  //
-  // ensemble = litteral_pur(ensemble);
+  afficher_ensemble(&ens);
 
   //étape de vérification du problème
 
-  tmp_sat = ensemble;
-  mot = calloc(ensemble.lit_max, sizeof(int));
+  // tmp_sat = ens;
+  // mot = calloc(ens.lit_max, sizeof(int));
   //étape de suppression propre des structures
 
-  printf("%d", backtraking(0));
+  // printf("%d", backtraking(0));
 
   // printf("\nAffichage après suppression des clauses unitaires : \n");
   // afficher_ensemble(&ensemble);
   // printf("%d\n", compter_clause(&ensemble));
   // printf("%d\n", compter_litteral(&ensemble));
 
-  free_ensemble(&tmp_sat);
-  free(mot);
+  // free_ensemble(&tmp_sat);
+  free_ensemble(&ens);
+  // free(mot);
 
   return 0;
 }

@@ -34,4 +34,6 @@ ensemble reduction_ensemble(ensemble);
 
 int backtraking(int);
 
+ensemble copie_ensemble(ensemble);
+
 #endif
